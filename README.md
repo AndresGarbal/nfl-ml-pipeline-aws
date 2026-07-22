@@ -13,16 +13,16 @@ managed storage, model training and prospective weekly prediction across the sea
 
 ```
                  ┌─────────────────── AWS ───────────────────┐
-                 │                                            │
- External APIs   │   ┌──────────────┐      ┌──────────────┐   │
- Tank01/RapidAPI ├──►│  EC2         │─────►│  Lambda      │───┼──► RDS
- nfl_data_py     │   │  ingestion + │ boto3│  secure      │   │   PostgreSQL
-                 │   │  training    │invoke│  insertion   │   │
- EventBridge ───►│   └──────┬───────┘      └──────────────┘   │
- (weekly cron)   │          │                                 │
-                 │          └──► SSM Parameter Store           │
-                 │               (state: last processed week)  │
-                 └────────────────────────────────────────────┘
+                 │                                           │
+ External APIs   │   ┌──────────────┐      ┌──────────────┐  │
+ Tank01/RapidAPI ├──►│  EC2         │─────►│  Lambda      │──┼──► RDS
+ nfl_data_py     │   │  ingestion + │ boto3│  secure      │  │   PostgreSQL
+                 │   │  training    │invoke│  insertion   │  │
+ EventBridge ───►│   └──────┬───────┘      └──────────────┘  │
+ (weekly cron)   │          │                                │
+                 │          └──► SSM Parameter Store         │
+                 │               (state: last processed week)│
+                 └───────────────────────────────────────────┘
 ```
 
 | AWS service | Role |
