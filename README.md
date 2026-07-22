@@ -41,21 +41,29 @@ managed storage, model training and prospective weekly prediction across the sea
 
 ## Contents
 
-### Data ingestion
+```
+nfl-ml-pipeline-aws/
+├── ingestion/   # data acquisition, runs on EC2
+├── lambdas/     # AWS Lambda handlers that insert into RDS
+├── model/       # production prediction pipeline
+└── notebooks/   # thesis analysis (Spanish) + serialized models
+```
+
+### Data ingestion — `ingestion/`
 | File | Description |
 |---|---|
-| `rapidapi.py` | Boxscores and schedule from Tank01 (RapidAPI). Automatic week detection via SSM, validation that all games are final, delivery to Lambda. |
-| `get_ngs.py` | Next Gen Stats (passing/rushing/receiving) via `nfl_data_py`, chunked delivery to Lambda. |
-| `schedule_model.py` | Data models for the schedule and game status. |
+| `ingestion/rapidapi.py` | Boxscores and schedule from Tank01 (RapidAPI). Automatic week detection via SSM, validation that all games are final, delivery to Lambda. |
+| `ingestion/get_ngs.py` | Next Gen Stats (passing/rushing/receiving) via `nfl_data_py`, chunked delivery to Lambda. |
+| `ingestion/schedule_model.py` | Data models for the schedule and game status. |
 | `lambdas/rapidapi_data_lambda.py` | Lambda that upserts schedule and boxscores (games, player/team stats, scoring plays, DST) into RDS. |
 | `lambdas/ngs_data_lambda.py` | Lambda that inserts Next Gen Stats (passing/receiving/rushing) into RDS. |
 
-### Prediction model (production)
+### Prediction model (production) — `model/`
 | File | Description |
 |---|---|
-| `team_model.py` | The system that ran in production during the 2025 season. Class `NFLDynamic2025System`: loads data, engineers 100+ features, trains one ElasticNet per metric (points, total/passing/rushing yards), predicts each week and saves to PostgreSQL, comparing against actual results. |
+| `model/team_model.py` | The system that ran in production during the 2025 season. Class `NFLDynamic2025System`: loads data, engineers 100+ features, trains one ElasticNet per metric (points, total/passing/rushing yards), predicts each week and saves to PostgreSQL, comparing against actual results. |
 
-### Analysis notebooks
+### Analysis notebooks — `notebooks/`
 > The notebooks below are the detailed analysis from the thesis and are written in
 > **Spanish**. Their outputs are preserved as-is (they cannot be re-run — the RDS was
 > decommissioned to save cost). The English **Results** section below summarizes them.
@@ -114,9 +122,9 @@ python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activa
 pip install -r requirements.txt
 cp .env.example .env        # fill in your credentials
 
-python rapidapi.py          # ingest boxscores and schedule
-python get_ngs.py           # ingest Next Gen Stats
-python team_model.py        # train, predict next week, save to the DB
+python ingestion/rapidapi.py    # ingest boxscores and schedule
+python ingestion/get_ngs.py     # ingest Next Gen Stats
+python model/team_model.py      # train, predict next week, save to the DB
 ```
 
 Required environment variables are documented in `.env.example`.
