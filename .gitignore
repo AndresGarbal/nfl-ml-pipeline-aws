@@ -1,0 +1,26 @@
+# Virtual environment
+env/
+venv/
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+
+# System / editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Generated data and logs
+*.log
+*.sqlite3
+data/
+downloads/
+tmp/
+error_chunk_*.json
